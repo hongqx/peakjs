@@ -15,7 +15,7 @@ define([
     var self = this;
 
     self.segments = [];
-    self.views = [peaks.waveform.waveformZoomView, peaks.waveform.waveformOverview].map(function(view){
+    self.views = [peaks.waveform.waveformZoomView/*, peaks.waveform.waveformOverview*/].map(function(view){
       if (!view.segmentLayer) {
         view.segmentLayer = new Konva.Layer();
         view.stage.add(view.segmentLayer);
@@ -25,9 +25,34 @@ define([
       return view;
     });
 
-    var createSegmentWaveform = function (segmentId, startTime, endTime, editable, color, labelText) {
+    //add by  hongqx
+    this.checkPosition = function(segment){
+         var _len  = this.segments.length, i = 0,
+            position = -1;
+         for(; i < _len ; i++){
+             if(segment.startTime > this.segments[i].endTime ){
+                continue;
+             }else{
+                position = i;
+                break;
+             }
+         }
+         if(position < 0){
+            position = _len;
+         }
+          console.log("插入的位置是"+position);
+         segment.index = position;
+         this.segments.splice(position, 0, segment);
+         i = position+1;
+         for(; i < _len ; i++){
+            this.segments[i].index = i;
+         }
+         return segment;
+    };
+    var createSegmentWaveform = function (id, segmentId, startTime, endTime, editable, color, labelText) {
       var segment = {
-        id: segmentId,
+        id: id,
+        segmentId : segmentId,
         startTime: startTime,
         endTime: endTime,
         labelText: labelText || "",
@@ -36,9 +61,9 @@ define([
       };
 
       var segmentZoomGroup = new Konva.Group();
-      var segmentOverviewGroup = new Konva.Group();
+     // var segmentOverviewGroup = new Konva.Group();
 
-      var segmentGroups = [segmentZoomGroup, segmentOverviewGroup];
+      var segmentGroups = [segmentZoomGroup/*, segmentOverviewGroup*/];
 
       var menter = function (event) {
         this.parent.label.show();
@@ -66,10 +91,10 @@ define([
         if (editable) {
           var draggable = true;
 
-          segmentGroup.inMarker = new peaks.options.segmentInMarker(draggable, segmentGroup, segment, segmentHandleDrag);
+          segmentGroup.inMarker = new peaks.options.segmentInMarker(draggable, segmentGroup, segment, segmentHandleDrag, segmentHandleDragEnd);
           segmentGroup.add(segmentGroup.inMarker);
 
-          segmentGroup.outMarker = new peaks.options.segmentOutMarker(draggable, segmentGroup, segment, segmentHandleDrag);
+          segmentGroup.outMarker = new peaks.options.segmentOutMarker(draggable, segmentGroup, segment, segmentHandleDrag, segmentHandleDragEnd);
           segmentGroup.add(segmentGroup.outMarker);
         }
 
@@ -78,19 +103,19 @@ define([
 
       segment.zoom = segmentZoomGroup;
       segment.zoom.view = peaks.waveform.waveformZoomView;
-      segment.overview = segmentOverviewGroup;
-      segment.overview.view = peaks.waveform.waveformOverview;
+     /* segment.overview = segmentOverviewGroup;
+      segment.overview.view = peaks.waveform.waveformOverview;*/
 
       return segment;
     };
 
     var updateSegmentWaveform = function (segment) {
       // Binding with data
-      peaks.waveform.waveformOverview.data.set_segment(peaks.waveform.waveformOverview.data.at_time(segment.startTime), peaks.waveform.waveformOverview.data.at_time(segment.endTime), segment.id);
+      //peaks.waveform.waveformOverview.data.set_segment(peaks.waveform.waveformOverview.data.at_time(segment.startTime), peaks.waveform.waveformOverview.data.at_time(segment.endTime), segment.id);
       peaks.waveform.waveformZoomView.data.set_segment(peaks.waveform.waveformZoomView.data.at_time(segment.startTime), peaks.waveform.waveformZoomView.data.at_time(segment.endTime), segment.id);
 
       // Overview
-      var overviewStartOffset = peaks.waveform.waveformOverview.data.at_time(segment.startTime);
+     /* var overviewStartOffset = peaks.waveform.waveformOverview.data.at_time(segment.startTime);
       var overviewEndOffset = peaks.waveform.waveformOverview.data.at_time(segment.endTime);
 
       segment.overview.setWidth(overviewEndOffset - overviewStartOffset);
@@ -105,9 +130,9 @@ define([
       }
 
       // Label
-      // segment.overview.label.setX(overviewStartOffset);
+      // segment.overview.label.setX(overviewStartOffset);*/
 
-      SegmentShape.update.call(segment.overview.waveformShape, peaks.waveform.waveformOverview, segment.id);
+      //SegmentShape.update.call(segment.overview.waveformShape, peaks.waveform.waveformOverview, segment.id);
 
       // Zoom
       var zoomStartOffset = peaks.waveform.waveformZoomView.data.at_time(segment.startTime);
@@ -156,6 +181,10 @@ define([
       updateSegmentWaveform(segment);
       this.render();
     }.bind(this);
+    
+    var segmentHandleDragEnd = function(thisSeg, segment){
+        console.log(segment.id)
+    }.bind(this);
 
     var getSegmentColor = function () {
       var c;
@@ -197,8 +226,8 @@ define([
      * @param {String=} labelText
      * @return {Object}
      */
-    this.createSegment = function (startTime, endTime, editable, color, labelText) {
-      var segmentId = "segment" + self.segments.length;
+    this.createSegment = function (segmentId, startTime, endTime, editable, color, labelText) {
+      var id = "segment" + self.segments.length;
 
       if ((startTime >= 0) === false){
         throw new TypeError("[waveform.segments.createSegment] startTime should be a positive value");
@@ -211,15 +240,15 @@ define([
       if ((endTime > startTime) === false){
         throw new RangeError("[waveform.segments.createSegment] endTime should be higher than startTime");
       }
-
-      var segment = createSegmentWaveform(segmentId, startTime, endTime, editable, color, labelText);
-
+      
+      var segment = createSegmentWaveform(id, segmentId, startTime, endTime, editable, color, labelText);
+      this.checkPosition(segment);
       updateSegmentWaveform(segment);
-      self.segments.push(segment);
+      //self.segments.push(segment);
 
       return segment;
     };
-
+  
     this.remove = function removeSegment(segment){
       var index = null;
 
@@ -233,7 +262,7 @@ define([
       if (typeof index === 'number'){
         segment = this.segments[index];
 
-        segment.overview.destroy();
+        //segment.overview.destroy();
         segment.zoom.destroy();
       }
 

@@ -25,7 +25,7 @@ define(['konva'], function (Konva) {
      * @param  {Function} onDrag    Callback after drag completed
      * @return {Konva Object}     Konva group object of handle marker elements
      */
-    return function (draggable, segment, parent, onDrag) {
+    return function (draggable, segment, parent, onDrag, onDragEnd) {
       var handleHeight = 20;
       var handleWidth = handleHeight / 2;
       var handleY = (height / 2) - 10.5;
@@ -53,7 +53,12 @@ define(['konva'], function (Konva) {
       }).on("dragmove", function (event) {
         onDrag(segment, parent);
       });
-
+      
+      if(onDragEnd) {
+          group.on('dragend', function (event) {
+              onDragEnd(segment, parent);
+          });
+      }
       var xPosition = inMarker ? -24 : 24;
 
       var text = new Konva.Text({

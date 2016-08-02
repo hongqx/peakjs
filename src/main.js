@@ -15,6 +15,9 @@ define('peaks', [
     };
   };
 
+  var checkSegs = function(event){
+       console.log("finish drag");
+  }
   var extend = function (to, from) {
     for (var key in from) {
       to[key] = from[key];
@@ -24,7 +27,7 @@ define('peaks', [
   };
 
   var ee = (EventEmitter.EventEmitter2 || EventEmitter);
-
+  
   function Peaks (container) {
     ee.call(this, { wildcard: true });
 
@@ -142,7 +145,7 @@ define('peaks', [
        */
       pointMarkerColor:     '#FF0000', //Color for the point marker
       pointDblClickHandler: null, //Handler called when point handle double clicked.
-      pointDragEndHandler:  null, // Called when the point handle has finished dragging
+      pointDragEndHandler: null, // Called when the point handle has finished dragging
 
       /**
        * WaveformData WebAudio Decoder Options
@@ -298,7 +301,7 @@ define('peaks', [
 
           if (Array.isArray(segments)) {
             segments.forEach(function (segment) {
-              self.waveform.segments.createSegment(segment.startTime, segment.endTime, segment.editable, segment.color, segment.labelText);
+              self.waveform.segments.createSegment(segment.segmentId, segment.startTime, segment.endTime, segment.editable, segment.color, segment.labelText);
             });
 
             self.waveform.segments.render();
