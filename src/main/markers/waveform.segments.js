@@ -43,7 +43,8 @@ define([
           console.log("插入的位置是"+position);
          segment.index = position;
          this.segments.splice(position, 0, segment);
-         i = position+1;
+         i = position+1,
+         _len = this.segments.length;
          for(; i < _len ; i++){
             this.segments[i].index = i;
          }

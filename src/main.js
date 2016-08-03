@@ -298,10 +298,11 @@ define('peaks', [
               }
             ];
           }
-
+          var newSegments = [];
           if (Array.isArray(segments)) {
             segments.forEach(function (segment) {
-              self.waveform.segments.createSegment(segment.segmentId, segment.startTime, segment.endTime, segment.editable, segment.color, segment.labelText);
+              var _segment = self.waveform.segments.createSegment(segment.segmentId, segment.startTime, segment.endTime, segment.editable, segment.color, segment.labelText);
+              newSegments.push(_segment);
             });
 
             self.waveform.segments.render();
@@ -309,6 +310,7 @@ define('peaks', [
           else {
             throw new TypeError("[Peaks.segments.addSegment] Unrecognized segment parameters.");
           }
+          return newSegments
         }
 
         return {
