@@ -25,7 +25,7 @@ define(['konva'], function (Konva) {
      * @param  {Function} onDrag    Callback after drag completed
      * @return {Konva Object}     Konva group object of handle marker elements
      */
-    return function (draggable, segment, parent, onDrag, onDragEnd) {
+    return function (draggable, segment, parent,segmentList, onDrag, onDragEnd, onDragStart) {
       var handleHeight = 20;
       var handleWidth = handleHeight / 2;
       var handleY = (height / 2) - 10.5;
@@ -51,12 +51,17 @@ define(['konva'], function (Konva) {
           };
         }
       }).on("dragmove", function (event) {
-        onDrag(segment, parent);
+        onDrag(segment, parent, segmentList);
       });
       
       if(onDragEnd) {
           group.on('dragend', function (event) {
-              onDragEnd(segment, parent);
+              onDragEnd(segment, parent, segmentList);
+          });
+      }
+      if(onDragStart) {
+          group.on('dragstart', function (event) {
+              onDragStart(segment, parent, segmentList);
           });
       }
       var xPosition = inMarker ? -24 : 24;
@@ -335,7 +340,7 @@ define(['konva'], function (Konva) {
      * @return {Function} Provides Konva handle group on execution
      */
     defaultInMarker: function (options) {
-      return createHandle(options.height, options.outMarkerColor, true);
+      return createHandle(options.height, options.inMarkerColor, true);
     },
 
     /**

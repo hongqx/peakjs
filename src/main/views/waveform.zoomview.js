@@ -57,7 +57,7 @@ define([
 
     that.zoomWaveformLayer.add(that.background);
 
-    that.axis = new WaveformAxis(that);
+    that.axis = new WaveformAxis(that,1);
 
     that.createZoomWaveform();
     that.createUi();
@@ -95,6 +95,11 @@ define([
           });
         }
       }
+    });
+    
+    //绑定双击事件
+    that.stage.on('dblclick', function (event) {
+        that.peaks.emit('dbclickAddSegment');
     });
 
     // EVENTS ====================================================

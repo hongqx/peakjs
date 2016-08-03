@@ -88,7 +88,7 @@ define('peaks', [
       /**
        * Colour for the out marker of segments
        */
-      outMarkerColor:        '#a0a0a0',
+      outMarkerColor:        'blue',
       /**
        * Colour for the zoomed in waveform
        */
@@ -345,16 +345,18 @@ define('peaks', [
             var indexes = self.waveform.segments.segments
               .filter(fnFilter)
               .map(function (segment, i) {
-                self.waveform.segments.remove(segment);
+                return self.waveform.segments.remove(segment);
 
-                return i;
+                //return i;
               })
               .sort(function (a, b) {
                 return b - a;
               })
               .map(function (index) {
                 self.waveform.segments.segments.splice(index, 1);
-
+                for(; index <  self.waveform.segments.segments.length; index++){
+                    self.waveform.segments.segments[index].index = index;
+                }
                 return index;
               });
 

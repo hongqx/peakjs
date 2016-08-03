@@ -49,7 +49,7 @@ define([
          }
          return segment;
     };
-    var createSegmentWaveform = function (id, segmentId, startTime, endTime, editable, color, labelText) {
+    var createSegmentWaveform = function (id, segmentId, startTime, endTime, editable, color, labelText, segmentList) {
       var segment = {
         id: id,
         segmentId : segmentId,
@@ -91,10 +91,10 @@ define([
         if (editable) {
           var draggable = true;
 
-          segmentGroup.inMarker = new peaks.options.segmentInMarker(draggable, segmentGroup, segment, segmentHandleDrag, segmentHandleDragEnd);
+          segmentGroup.inMarker = new peaks.options.segmentInMarker(draggable, segmentGroup, segment, segmentList, segmentHandleDrag, segmentHandleDragEnd, segmentHandleDragStart);
           segmentGroup.add(segmentGroup.inMarker);
 
-          segmentGroup.outMarker = new peaks.options.segmentOutMarker(draggable, segmentGroup, segment, segmentHandleDrag, segmentHandleDragEnd);
+          segmentGroup.outMarker = new peaks.options.segmentOutMarker(draggable, segmentGroup, segment, segmentList, segmentHandleDrag, segmentHandleDragEnd, segmentHandleDragStart);
           segmentGroup.add(segmentGroup.outMarker);
         }
 
@@ -164,8 +164,13 @@ define([
         segment.zoom.hide();
       }
     };
+    var segmentHandleDragStart = function(thisSeg, segment, segmentList){
+        segment.pStartTime = segment.startTime;
+        segment.pEndTime = segment.endTime;
+        peaks.emit("segments.dragstart", segment);
 
-    var segmentHandleDrag = function (thisSeg, segment) {
+    };
+    var segmentHandleDrag = function (thisSeg, segment, segmentList) {
       if (thisSeg.inMarker.getX() > 0) {
         var inOffset = thisSeg.view.frameOffset + thisSeg.inMarker.getX() + thisSeg.inMarker.getWidth();
         segment.startTime = thisSeg.view.data.time(inOffset);
@@ -175,15 +180,44 @@ define([
         var outOffset = thisSeg.view.frameOffset + thisSeg.outMarker.getX();
         segment.endTime = thisSeg.view.data.time(outOffset);
       }
-      
-      peaks.emit("segments.dragged", segment);
+      peaks.emit("segments.dragmove", segment);
 
       updateSegmentWaveform(segment);
       this.render();
     }.bind(this);
     
-    var segmentHandleDragEnd = function(thisSeg, segment){
-        console.log(segment.id)
+    var segmentHandleDragEnd = function(thisSeg, segment, segmentList){
+         var curIndex = segment.index;
+         var flag =  0,type;
+         /**
+          * 在拖拽完成之后，判断当前节点的endTime是否超过下一节点的startTime,或者是当前节点的startTime是否小于上一节点的endTime
+          */
+         if(segment.endTime - segment.startTime < 1){
+            if(segment.endTime !== segment.pEndTime){
+                segment.endTime = segment.startTime + 1;
+                flag = 1;
+            }else if(segment.startTime !== segment.pStartTime){
+                segment.startTime = segment.endTime - 1 ;
+                flag = 1;
+            }
+         } 
+         if((curIndex > 0  && segment.startTime < segmentList[curIndex-1].endTime)){
+             flag = 1;
+             console.log("开始时间小于相邻的开始时间");
+             segment.startTime = segmentList[curIndex-1].endTime;
+         }
+         if((curIndex < segmentList.length-1 && segment.endTime > segmentList[curIndex+1].startTime)){
+             flag = 1;
+             console.log("结束时间大于相邻的结束时间");
+             segment.endTime = segmentList[curIndex+1].startTime;
+         }
+         segment.pStartTime = segment.startTime;
+         segment.pEndTime = segment.endTime;
+         peaks.emit("segments.dragend", segment);
+         if(flag === 1){
+            updateSegmentWaveform(segment);
+            this.render();
+         }
     }.bind(this);
 
     var getSegmentColor = function () {
@@ -240,8 +274,8 @@ define([
       if ((endTime > startTime) === false){
         throw new RangeError("[waveform.segments.createSegment] endTime should be higher than startTime");
       }
-      
-      var segment = createSegmentWaveform(id, segmentId, startTime, endTime, editable, color, labelText);
+      var segmentList  = this.segments;
+      var segment = createSegmentWaveform(id, segmentId, startTime, endTime, editable, color, labelText, segmentList);
       this.checkPosition(segment);
       updateSegmentWaveform(segment);
       //self.segments.push(segment);

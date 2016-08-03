@@ -26,9 +26,9 @@ define(["peaks/waveform/waveform.mixins", "konva"], function (mixins, Konva) {
     }
   }
 
-  function WaveformAxis(view) {
+  function WaveformAxis(view,type) {
     this.view = view; // store reference to waveform view object
-
+    this.type = type || 0;
     this.axisShape = new Konva.Shape({
       fill: 'rgba(38, 255, 161, 1)',
       strokeWidth: 0,
@@ -51,7 +51,7 @@ define(["peaks/waveform/waveform.mixins", "konva"], function (mixins, Konva) {
   WaveformAxis.prototype.getAxisLabelScale = function() {
     var baseSecs   = 1; // seconds
     var steps      = [1, 2, 5, 10, 20, 30];
-    var minSpacing = 60;
+    var minSpacing = this.type === 1 ? 20 : 60;
     var index      = 0;
 
     var secs;

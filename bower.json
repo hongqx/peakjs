@@ -20,5 +20,8 @@
     "client/bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "peaks.js": "^0.5.6"
+  }
 }

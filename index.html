@@ -134,7 +134,7 @@
           };
 
           peaksInstance = Peaks.init(options);
-
+          peaksInstance.zoom.zoomOut();
           window['peaksInstance'] = peaksInstance;
 
           document.querySelector('[data-action="zoom-in"]').addEventListener("click", peaksInstance.zoom.zoomIn.bind(peaksInstance));
@@ -157,6 +157,17 @@
             };
 
             peaksInstance.points.add([point]);
+          });
+
+          this.peaksInstance.on('segments.dragend', function (segment) {
+               console.log("-------"+JSON.stringify(segment));
+          });
+          this.peaksInstance.on('segments.dragmove', function (segment) {
+               console.log("-------segments.dragmove");
+          });
+
+          this.peaksInstance.on('dbclickAddSegment', function () {
+               console.log("downClick");
           });
 
           document.querySelector('button[data-action="log-data"]').addEventListener("click", function (event) {
