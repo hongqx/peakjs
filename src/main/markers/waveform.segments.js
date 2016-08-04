@@ -26,21 +26,32 @@ define([
     });
 
     //add by  hongqx
-    this.checkPosition = function(segment){
+    this.checkPosition = function(segment,index){
          var _len  = this.segments.length, i = 0,
             position = -1;
-         for(; i < _len ; i++){
-             if(segment.startTime > this.segments[i].endTime ){
-                continue;
-             }else{
-                position = i;
-                break;
-             }
-         }
+          if(!segment && index){
+              var i = index;
+              for(; i < _len ; i++){
+                 this.segments[i].index = i;
+              }
+              return null;
+          }
+          if(segment.index){
+              position = index;
+          }else{
+            for(; i < _len ; i++){
+               if(segment.startTime >= this.segments[i].endTime ){
+                  continue;
+               }else{
+                  position = i;
+                  break;
+               }
+            }
+          }
          if(position < 0){
             position = _len;
          }
-          console.log("插入的位置是"+position);
+         console.log("插入的位置是"+position);
          segment.index = position;
          this.segments.splice(position, 0, segment);
          i = position+1,
@@ -168,6 +179,7 @@ define([
     var segmentHandleDragStart = function(thisSeg, segment, segmentList){
         segment.pStartTime = segment.startTime;
         segment.pEndTime = segment.endTime;
+        console.log('dragstart');
         peaks.emit("segments.dragstart", segment);
 
     };
@@ -175,11 +187,13 @@ define([
       if (thisSeg.inMarker.getX() > 0) {
         var inOffset = thisSeg.view.frameOffset + thisSeg.inMarker.getX() + thisSeg.inMarker.getWidth();
         segment.startTime = thisSeg.view.data.time(inOffset);
+        console.log("startTime is moving");
       }
 
       if (thisSeg.outMarker.getX() < thisSeg.view.width) {
         var outOffset = thisSeg.view.frameOffset + thisSeg.outMarker.getX();
         segment.endTime = thisSeg.view.data.time(outOffset);
+         console.log("endTime is moving");
       }
       peaks.emit("segments.dragmove", segment);
 
@@ -300,7 +314,8 @@ define([
         //segment.overview.destroy();
         segment.zoom.destroy();
       }
-
+      this.segments.splice(index,1);
+      this.checkPosition(null,index);
       return index;
     };
 

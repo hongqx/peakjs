@@ -310,7 +310,7 @@ define('peaks', [
           else {
             throw new TypeError("[Peaks.segments.addSegment] Unrecognized segment parameters.");
           }
-          return newSegments
+          return newSegments;
         }
 
         return {
@@ -493,6 +493,20 @@ define('peaks', [
 
           getCurrentTime: function () {
             return self.player.getTime();
+          },
+
+           /**
+           * Returns the total time of the media element, in seconds.
+           *
+           * ```js
+           * var p = Peaks.init(…);
+           * p.time.getDuration();     // -> 0
+           * ```
+           *
+           * @returns {Number}
+           */
+          getDuration: function(){
+            return self.player.getDuration();
           }
         };
       }
