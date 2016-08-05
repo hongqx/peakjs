@@ -30,9 +30,9 @@ define([
          var _len  = this.segments.length, i = 0,
             position = -1;
           if(!segment && index){
-              var i = index;
+              var i = index+1;
               for(; i < _len ; i++){
-                 this.segments[i].index = i;
+                 this.segments[i].index = i-1;
               }
               return null;
           }
@@ -179,7 +179,7 @@ define([
     var segmentHandleDragStart = function(thisSeg, segment, segmentList){
         segment.pStartTime = segment.startTime;
         segment.pEndTime = segment.endTime;
-        console.log('dragstart');
+        console.log('dragstart：segment.startTime:'+segment.startTime+'  segment.endTime：'+segment.endTime);
         peaks.emit("segments.dragstart", segment);
 
     };
@@ -203,6 +203,7 @@ define([
     
     var segmentHandleDragEnd = function(thisSeg, segment, segmentList){
          var curIndex = segment.index;
+         console.log('segment.startTime:'+segment.startTime+'  segment.endTime：'+segment.endTime);
          var flag =  0,type;
          /**
           * 在拖拽完成之后，判断当前节点的endTime是否超过下一节点的startTime,或者是当前节点的startTime是否小于上一节点的endTime
@@ -314,7 +315,7 @@ define([
         //segment.overview.destroy();
         segment.zoom.destroy();
       }
-      this.segments.splice(index,1);
+      //this.segments.splice(index,1);
       this.checkPosition(null,index);
       return index;
     };

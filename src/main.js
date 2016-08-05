@@ -319,7 +319,7 @@ define('peaks', [
 
           remove: function (segment) {
             var index = self.waveform.segments.remove(segment);
-
+            
             if (index === null) {
               throw new RangeError('Unable to find the requested segment' + String(segment));
             }
