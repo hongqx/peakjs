@@ -29,7 +29,7 @@ define([
     this.checkPosition = function(segment,index){
          var _len  = this.segments.length, i = 0,
             position = -1;
-          if(!segment && index){
+          if(segment === null && index!== null){
               var i = index+1;
               for(; i < _len ; i++){
                  this.segments[i].index = i-1;
@@ -316,7 +316,7 @@ define([
         segment.zoom.destroy();
       }
       //this.segments.splice(index,1);
-      this.checkPosition(null,index);
+      this.checkPosition(null, index);
       return index;
     };
 
