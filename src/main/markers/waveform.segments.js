@@ -7,7 +7,7 @@
 define([
   "konva",
   "peaks/waveform/waveform.mixins",
-  "peaks/markers/shapes/wave"
+  "peaks/markers/shapes/rect"
 ], function (Konva, mixins, SegmentShape) {
   'use strict';
 
@@ -51,7 +51,7 @@ define([
          if(position < 0){
             position = _len;
          }
-         console.log("插入的位置是"+position);
+         console.log("the position insert is "+position);
          segment.index = position;
          this.segments.splice(position, 0, segment);
          i = position+1,
@@ -73,7 +73,7 @@ define([
       };
 
       var segmentZoomGroup = new Konva.Group();
-     // var segmentOverviewGroup = new Konva.Group();
+      // var segmentOverviewGroup = new Konva.Group();
 
       var segmentGroups = [segmentZoomGroup/*, segmentOverviewGroup*/];
 
@@ -115,7 +115,7 @@ define([
 
       segment.zoom = segmentZoomGroup;
       segment.zoom.view = peaks.waveform.waveformZoomView;
-     /* segment.overview = segmentOverviewGroup;
+      /*segment.overview = segmentOverviewGroup;
       segment.overview.view = peaks.waveform.waveformOverview;*/
 
       return segment;
@@ -127,24 +127,24 @@ define([
       peaks.waveform.waveformZoomView.data.set_segment(peaks.waveform.waveformZoomView.data.at_time(segment.startTime), peaks.waveform.waveformZoomView.data.at_time(segment.endTime), segment.id);
 
       // Overview
-     /* var overviewStartOffset = peaks.waveform.waveformOverview.data.at_time(segment.startTime);
-      var overviewEndOffset = peaks.waveform.waveformOverview.data.at_time(segment.endTime);
+      // var overviewStartOffset = peaks.waveform.waveformOverview.data.at_time(segment.startTime);
+      // var overviewEndOffset = peaks.waveform.waveformOverview.data.at_time(segment.endTime);
 
-      segment.overview.setWidth(overviewEndOffset - overviewStartOffset);
+      // segment.overview.setWidth(overviewEndOffset - overviewStartOffset);
 
-      if (segment.editable) {
-        if (segment.overview.inMarker) segment.overview.inMarker.show().setX(overviewStartOffset - segment.overview.inMarker.getWidth());
-        if (segment.overview.outMarker) segment.overview.outMarker.show().setX(overviewEndOffset);
+      // if (segment.editable) {
+      //   if (segment.overview.inMarker) segment.overview.inMarker.show().setX(overviewStartOffset - segment.overview.inMarker.getWidth());
+      //   if (segment.overview.outMarker) segment.overview.outMarker.show().setX(overviewEndOffset);
 
-        // Change Text
-        segment.overview.inMarker.label.setText(mixins.niceTime(segment.startTime, false));
-        segment.overview.outMarker.label.setText(mixins.niceTime(segment.endTime, false));
-      }
+      //   // Change Text
+      //   segment.overview.inMarker.label.setText(mixins.niceTime(segment.startTime, false));
+      //   segment.overview.outMarker.label.setText(mixins.niceTime(segment.endTime, false));
+      // }
 
-      // Label
-      // segment.overview.label.setX(overviewStartOffset);*/
+      // // Label
+      // segment.overview.label.setX(overviewStartOffset);
 
-      //SegmentShape.update.call(segment.overview.waveformShape, peaks.waveform.waveformOverview, segment.id);
+      // SegmentShape.update.call(segment.overview.waveformShape, peaks.waveform.waveformOverview, segment.id);
 
       // Zoom
       var zoomStartOffset = peaks.waveform.waveformZoomView.data.at_time(segment.startTime);
@@ -187,13 +187,11 @@ define([
       if (thisSeg.inMarker.getX() > 0) {
         var inOffset = thisSeg.view.frameOffset + thisSeg.inMarker.getX() + thisSeg.inMarker.getWidth();
         segment.startTime = thisSeg.view.data.time(inOffset);
-        console.log("startTime is moving");
       }
 
       if (thisSeg.outMarker.getX() < thisSeg.view.width) {
         var outOffset = thisSeg.view.frameOffset + thisSeg.outMarker.getX();
         segment.endTime = thisSeg.view.data.time(outOffset);
-         console.log("endTime is moving");
       }
       peaks.emit("segments.dragmove", segment);
 
