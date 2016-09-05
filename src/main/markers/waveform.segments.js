@@ -79,11 +79,15 @@ define([
 
       var menter = function (event) {
         this.parent.label.show();
+        this.parent.inMarker.show();
+        this.parent.outMarker.show();
         this.parent.view.segmentLayer.draw();
       };
 
       var mleave = function (event) {
         this.parent.label.hide();
+        this.parent.inMarker.hide();
+        this.parent.outMarker.hide();
         this.parent.view.segmentLayer.draw();
       };
 
@@ -100,17 +104,20 @@ define([
         segmentGroup.label = new peaks.options.segmentLabelDraw(segmentGroup, segment);
         segmentGroup.add(segmentGroup.label.hide());
 
-        if (editable) {
+        //if (editable) {
           var draggable = true;
 
           segmentGroup.inMarker = new peaks.options.segmentInMarker(draggable, segmentGroup, segment, segmentList, segmentHandleDrag, segmentHandleDragEnd, segmentHandleDragStart);
-          segmentGroup.add(segmentGroup.inMarker);
+          segmentGroup.add(segmentGroup.inMarker.hide());
 
           segmentGroup.outMarker = new peaks.options.segmentOutMarker(draggable, segmentGroup, segment, segmentList, segmentHandleDrag, segmentHandleDragEnd, segmentHandleDragStart);
-          segmentGroup.add(segmentGroup.outMarker);
-        }
-
+          segmentGroup.add(segmentGroup.outMarker.hide());
+        //}
+        
         view.segmentLayer.add(segmentGroup);
+        //segmentGroup.inMarker.hide();
+        //segmentGroup.outMarker.hide();
+        //view.segmentLayer.draw();
       });
 
       segment.zoom = segmentZoomGroup;
@@ -163,8 +170,8 @@ define([
         segment.zoom.show();
 
         if (segment.editable) {
-          if (segment.zoom.inMarker) segment.zoom.inMarker.show().setX(startPixel - segment.zoom.inMarker.getWidth());
-          if (segment.zoom.outMarker) segment.zoom.outMarker.show().setX(endPixel);
+          if (segment.zoom.inMarker) segment.zoom.inMarker/*.show()*/.setX(startPixel - segment.zoom.inMarker.getWidth());
+          if (segment.zoom.outMarker) segment.zoom.outMarker/*.show()*/.setX(endPixel);
 
           // Change Text
           segment.zoom.inMarker.label.setText(mixins.niceTime(segment.startTime, false));

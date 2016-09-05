@@ -29,8 +29,8 @@ define(['konva'], function (Konva) {
       var handleHeight = 20;
       var handleWidth = handleHeight / 2;
       var handleY = (height / 2) - 10.5;
-      var handleX = inMarker ? -handleWidth + 0.5 : 0.5;
-
+      //var handleX =  0.5;//inMarker ? -handleWidth + 0.5 : 0.5;
+      var handleX =  inMarker ;
       var group = new Konva.Group({
         draggable: draggable,
         dragBoundFunc: function(pos) {
@@ -111,10 +111,11 @@ define(['konva'], function (Konva) {
        */
       handle.on("mouseover", function (event) {
         if (inMarker) text.setX(xPosition - text.getWidth());
+        handle.show();
         text.show();
         segment.view.segmentLayer.draw();
       });
-      handle.on("mouseout", function (event) {
+      handle.on("mouseleave", function (event) {
         text.hide();
         segment.view.segmentLayer.draw();
       });
