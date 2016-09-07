@@ -26,11 +26,11 @@ define(['konva'], function (Konva) {
      * @return {Konva Object}     Konva group object of handle marker elements
      */
     return function (draggable, segment, parent,segmentList, onDrag, onDragEnd, onDragStart) {
-      var handleHeight = 20;
-      var handleWidth = handleHeight / 2;
+      var handleHeight = 30;
+      var handleWidth = 10;//handleHeight / 2;
       var handleY = (height / 2) - 10.5;
-      //var handleX =  0.5;//inMarker ? -handleWidth + 0.5 : 0.5;
-      var handleX =  inMarker ;
+      var handleX =  0.5;//inMarker ? -handleWidth + 0.5 : 0.5;
+      var handleX =  inMarker ? 0.5 : -handleWidth ;
       var group = new Konva.Group({
         draggable: draggable,
         dragBoundFunc: function(pos) {
@@ -61,7 +61,12 @@ define(['konva'], function (Konva) {
       }
       if(onDragStart) {
           group.on('dragstart', function (event) {
-              onDragStart(segment, parent, segmentList);
+             if(! group.parent.outMarker.isVisible()){
+                 group.parent.outMarker.show();
+                 group.parent.inMarker.show();
+                 group.parent.view.segmentLayer.draw();
+             }
+             onDragStart(segment, parent, segmentList);
           });
       }
       var xPosition = inMarker ? -24 : 24;
@@ -94,7 +99,7 @@ define(['konva'], function (Konva) {
         y: handleY,
         fillPatternImage: imageObj
       });
-
+      //console.log("inMarker:"+inMarker+"  width:"+handleWidth+"  height:"+handleHeight+"  handleX:"+handleX+"  handleY:"+handleY);
       /*
       Vertical Line
        */
@@ -109,13 +114,14 @@ define(['konva'], function (Konva) {
       /*
       Events
        */
-      handle.on("mouseover", function (event) {
+      handle.on("mouseenter", function (event) {
         if (inMarker) text.setX(xPosition - text.getWidth());
         handle.show();
         text.show();
         segment.view.segmentLayer.draw();
       });
       handle.on("mouseleave", function (event) {
+        handle.show();
         text.hide();
         segment.view.segmentLayer.draw();
       });

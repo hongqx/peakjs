@@ -24,7 +24,6 @@ define([
 
       return view;
     });
-
     //add by  hongqx
     this.checkPosition = function(segment,index){
          var _len  = this.segments.length, i = 0,
@@ -79,16 +78,22 @@ define([
 
       var menter = function (event) {
         this.parent.label.show();
-        this.parent.inMarker.show();
-        this.parent.outMarker.show();
+        // this.parent.inMarker.show();
+        // this.parent.outMarker.show();
         this.parent.view.segmentLayer.draw();
+        //console.log("mouseenter clientX:"+event.evt.clientX+"  clientY:"+event.evt.clientY+"  layerX:"+event.evt.layerX+"   layerY:"+event.evt.layerY+"  X:"+event.evt.x+"  Y:"+event.evt.y);
+        //console.log("mouseenter"); 
       };
 
       var mleave = function (event) {
         this.parent.label.hide();
-        this.parent.inMarker.hide();
-        this.parent.outMarker.hide();
+        // this.parent.inMarker.hide();
+        // this.parent.outMarker.hide();
         this.parent.view.segmentLayer.draw();
+        //console.log("mouseout clientX:"+event.evt.clientX+"  clientY:"+event.evt.clientY+"  layerX:"+event.evt.layerX+"   layerY:"+event.evt.layerY+"  X:"+event.evt.x+"  Y:"+event.evt.y);
+      };
+      var mclick = function(event){
+        peaks.emit("segment.click", segment);
       };
 
       segmentGroups.forEach(function(segmentGroup, i){
@@ -96,8 +101,9 @@ define([
 
         segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
 
-        segmentGroup.waveformShape.on("mouseenter", menter);
+        segmentGroup.waveformShape.on("mouseover", menter);
         segmentGroup.waveformShape.on("mouseleave", mleave);
+        segmentGroup.waveformShape.on("click", mclick);
 
         segmentGroup.add(segmentGroup.waveformShape);
 
@@ -186,10 +192,11 @@ define([
     var segmentHandleDragStart = function(thisSeg, segment, segmentList){
         segment.pStartTime = segment.startTime;
         segment.pEndTime = segment.endTime;
-        console.log('dragstart：segment.startTime:'+segment.startTime+'  segment.endTime：'+segment.endTime);
+        //console.log('dragstart：segment.startTime:'+segment.startTime+'  segment.endTime：'+segment.endTime);
         peaks.emit("segments.dragstart", segment);
 
     };
+  
     var segmentHandleDrag = function (thisSeg, segment, segmentList) {
       if (thisSeg.inMarker.getX() > 0) {
         var inOffset = thisSeg.view.frameOffset + thisSeg.inMarker.getX() + thisSeg.inMarker.getWidth();
@@ -208,7 +215,7 @@ define([
     
     var segmentHandleDragEnd = function(thisSeg, segment, segmentList){
          var curIndex = segment.index;
-         console.log('segment.startTime:'+segment.startTime+'  segment.endTime：'+segment.endTime);
+         //console.log('segment.startTime:'+segment.startTime+'  segment.endTime：'+segment.endTime);
          var flag =  0,type;
          /**
           * 在拖拽完成之后，判断当前节点的endTime是否超过下一节点的startTime,或者是当前节点的startTime是否小于上一节点的endTime
@@ -224,12 +231,12 @@ define([
          } 
          if((curIndex > 0  && segment.startTime < segmentList[curIndex-1].endTime)){
              flag = 1;
-             console.log("开始时间小于相邻的开始时间");
+             //console.log("开始时间小于相邻的开始时间");
              segment.startTime = segmentList[curIndex-1].endTime;
          }
          if((curIndex < segmentList.length-1 && segment.endTime > segmentList[curIndex+1].startTime)){
              flag = 1;
-             console.log("结束时间大于相邻的结束时间");
+             //console.log("结束时间大于相邻的结束时间");
              segment.endTime = segmentList[curIndex+1].startTime;
          }
          segment.pStartTime = segment.startTime;
