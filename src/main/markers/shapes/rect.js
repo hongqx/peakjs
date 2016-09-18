@@ -29,8 +29,35 @@ define([
       height: view.height,
       opacity:0.4
     });
-
-    return shape;
+    return shape
+    /*var group = new Konva.Group({});
+    var shape = new Konva.Rect({
+      fill: segmentData.color,
+      strokeWidth: 0,
+      y: 0,
+      x: 0,
+      width: 0,
+      height: view.height,
+      opacity:0.4
+    });
+    var line1 = new Konva.Line({
+        points: [0.5, 0, 0.5, view.height],
+        strokeWidth: 1,
+        stroke: "blue",
+        x: 0,
+        y: 0
+    });
+    var line2 = new Konva.Line({
+        points: [0.5, 0, 0.5, view.height],
+        strokeWidth: 1,
+        stroke: "red",
+        x: 0,
+        y: 0
+    });
+    group.add(shape);
+    group.add(line1);
+    group.add(line2);
+    return group;*/
   };
 
   /**

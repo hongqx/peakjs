@@ -61,11 +61,11 @@ define(['konva'], function (Konva) {
       }
       if(onDragStart) {
           group.on('dragstart', function (event) {
-             if(! group.parent.outMarker.isVisible()){
+             /*if(! group.parent.outMarker.isVisible()){
                  group.parent.outMarker.show();
                  group.parent.inMarker.show();
                  group.parent.view.segmentLayer.draw();
-             }
+             }*/
              onDragStart(segment, parent, segmentList);
           });
       }
@@ -110,18 +110,18 @@ define(['konva'], function (Konva) {
         x: 0,
         y: 0
       });
-
+      line.show();
       /*
       Events
        */
       handle.on("mouseenter", function (event) {
         if (inMarker) text.setX(xPosition - text.getWidth());
-        handle.show();
+        line.show();
         text.show();
         segment.view.segmentLayer.draw();
       });
       handle.on("mouseleave", function (event) {
-        handle.show();
+        line.show();
         text.hide();
         segment.view.segmentLayer.draw();
       });
