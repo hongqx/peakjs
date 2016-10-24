@@ -87,20 +87,33 @@ define([
       };
 
       var mclick = function(event){
-        if(self.showMarkerView && self.showMarkerView.parent){
-            self.showMarkerView.parent.inMarker.children[2].hide();
-            self.showMarkerView.parent.outMarker.children[2].hide();
-            self.showMarkerView.parent.view.segmentLayer.draw();
+        if(self.segment ){
+            self.segment.inMarker.children[2].hide();
+            self.segment.outMarker.children[2].hide();
+            self.segment.view.segmentLayer.draw();
             //window.parent1 = self.showMarkerView.parent;
         }
         //window.inMarker = this.parent.inMarker;
         this.parent.inMarker.children[2].show();
         this.parent.outMarker.children[2].show();
         this.parent.view.segmentLayer.draw();
-        self.showMarkerView = this;
+        self.segment = this.parent;
         peaks.emit("segment.click", segment);
       };
-
+      
+      var changeMarkets = function(_segment){
+          if(self.segment ){
+            self.segment.inMarker.children[2].hide();
+            self.segment.outMarker.children[2].hide();
+            self.segment.view.segmentLayer.draw();
+            //window.parent1 = self.showMarkerView.parent;
+          }
+          //window.inMarker = this.parent.inMarker;
+          //segment.inMarker.children[2].show();
+          //segment.outMarker.children[2].show();
+          //layer.draw();
+          self.segment = _segment;
+      }
       segmentGroups.forEach(function(segmentGroup, i){
         var view = self.views[i];
 
@@ -119,15 +132,16 @@ define([
           var draggable = true;
 
           segmentGroup.inMarker = new peaks.options.segmentInMarker(draggable, segmentGroup, segment, segmentList, segmentHandleDrag, segmentHandleDragEnd, segmentHandleDragStart);
-          segmentGroup.inMarker.children[2].hide();
+          //segmentGroup.inMarker.children[2].hide();
           segmentGroup.add(segmentGroup.inMarker);
 
           segmentGroup.outMarker = new peaks.options.segmentOutMarker(draggable, segmentGroup, segment, segmentList, segmentHandleDrag, segmentHandleDragEnd, segmentHandleDragStart);
-          segmentGroup.outMarker.children[2].hide();
+          //segmentGroup.outMarker.children[2].hide();
           segmentGroup.add(segmentGroup.outMarker);
         //}
-        
-        view.segmentLayer.add(segmentGroup);
+       view.segmentLayer.add(segmentGroup);
+       changeMarkets(segmentGroup);
+        //changeMarkets(segmentGroup)
         //segmentGroup.inMarker.hide();
         //segmentGroup.outMarker.hide();
         //view.segmentLayer.draw();
