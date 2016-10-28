@@ -87,6 +87,9 @@ define([
       };
 
       var mclick = function(event){
+        if(this.parent === self.segment){
+          return;
+        }
         if(self.segment ){
             self.segment.inMarker.children[2].hide();
             self.segment.outMarker.children[2].hide();
@@ -102,6 +105,9 @@ define([
       };
       
       var changeMarkets = function(_segment){
+          if(self.segment === _segment){
+            return;
+          }
           if(self.segment ){
             self.segment.inMarker.children[2].hide();
             self.segment.outMarker.children[2].hide();
@@ -362,7 +368,30 @@ define([
 
       this.render();
     };
+    /**
+     * 调用显示当前的把手
+     * @return {[type]} [description]
+     */
+    this.changeMarker = function(segment){
+        if(self.segment === segment.zoom){
+          return;
+        }
+        if(this.segment ){
+            this.segment.inMarker.children[2].hide();
+            this.segment.outMarker.children[2].hide();
+            this.segment.view.segmentLayer.draw();
+            //window.parent1 = self.showMarkerView.parent;
+        }
+        if(!segment){
+          this.segment = null;
+          return;
+        }
+        segment.zoom.inMarker.children[2].show();
+        segment.zoom.outMarker.children[2].show();
+        segment.zoom.view.segmentLayer.draw();
+        this.segment = segment.zoom;
 
+    };
     /**
      * Performs the rendering of the segments on screen
      *

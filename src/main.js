@@ -374,20 +374,8 @@ define('peaks', [
           getSegments: function () {
             return self.waveform.segments.segments;
           },
-          show : function(index){
-             if(index < 0 || (index!==0 && !index)){return;}
-             window.segmentLayer = self.waveform.segments.views[0].segmentLayer.children;
-             var _segmentsViews = self.waveform.segments.views[0].segmentLayer.children[index];
-             _segmentsViews.inMarker.show();
-             _segmentsViews.outMarker.show();
-             _segmentsViews.view.segmentLayer.draw();
-          },
-          hide : function(index){
-             if(index < 0 || (index!==0 && !index)){return;}
-             var _segmentsViews = self.waveform.segments.views[0].segmentLayer.children[index];
-             _segmentsViews.inMarker.hide();
-             _segmentsViews.outMarker.hide();
-             _segmentsViews.view.segmentLayer.draw();
+          changeCurrentMarker : function(segment){
+              self.waveform.segments.changeMarker(segment);
           }
         };
       }
