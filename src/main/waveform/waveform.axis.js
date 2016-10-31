@@ -82,7 +82,7 @@ define(["peaks/waveform/waveform.mixins", "konva"], function (mixins, Konva) {
     var currentFrameStartTime = view.data.time(view.frameOffset);
 
     // Draw axis markers
-    var markerHeight = 10;
+    var markerHeight = this.view.options.markerHeight || 10;
 
     // Time interval between axis markers (seconds)
     var axisLabelIntervalSecs = this.getAxisLabelScale();

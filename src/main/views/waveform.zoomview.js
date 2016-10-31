@@ -210,12 +210,12 @@ define([
     that.zoomPlayheadLine = new Konva.Line({
       points: [0.5, 0, 0.5, that.height],
       stroke: that.options.playheadColor,
-      strokeWidth: 1
+      strokeWidth: 1.5
     });
 
     that.zoomPlayheadText = new Konva.Text({
       x:2,
-      y: 12,
+      y: 20,
       text: "00:00:00",
       fontSize: 11,
       fontFamily: 'sans-serif',

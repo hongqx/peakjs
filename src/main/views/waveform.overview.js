@@ -125,13 +125,13 @@ define([
 
     this.refWaveformRect = new Konva.Rect({
       x: 0,
-      y: 11,
+      y: 0,//11,
       width: 0,
       stroke: that.options.overviewHighlightRectangleColor,
-      strokeWidth: 1,
-      height: this.height - (11*2),
+      strokeWidth: 3,
+      height: this.height ,//-(11*2),
       fill: that.options.overviewHighlightRectangleColor,
-      opacity: 0.3,
+      opacity: 0.5,
       cornerRadius: 2
     });
 
@@ -145,7 +145,7 @@ define([
     this.playheadLine = new Konva.Line({
       points: [0.5, 0, 0.5, that.height],
       stroke: that.options.playheadColor,
-      strokeWidth: 1,
+      strokeWidth: 1.5,
       x: 0
     });
 

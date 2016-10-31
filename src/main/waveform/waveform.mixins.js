@@ -16,7 +16,7 @@ define(['konva'], function (Konva) {
    * @param  {Boolean}  inMarker  Is this marker the inMarker (LHS) or outMarker (RHS)
    * @return {Function}
    */
-  var createHandle = function (height, color, inMarker) {
+  var createHandle = function (height, color, inMarker, linecolor) {
 
     /**
      * @param  {Boolean}  draggable If true, marker is draggable
@@ -103,13 +103,15 @@ define(['konva'], function (Konva) {
       /*
       Vertical Line
        */
-      var line = new Konva.Line({
+      var lineOption = {
         points: [0.5, 0, 0.5, height],
         strokeWidth: 1,
         stroke: color,
         x: 0,
         y: 0
-      });
+      };
+      lineOption.stroke = linecolor ? linecolor : color;
+      var line = new Konva.Line(lineOption);
       line.show();
       /*
       Events
@@ -186,7 +188,7 @@ define(['konva'], function (Konva) {
               x: xPosition,
               y: (height / 2) - 5,
               text: "",
-              fontSize: 10,
+              fontSize: 20,
               fontFamily: 'sans-serif',
               fill: "#000",
               textAlign: "center"
@@ -347,7 +349,7 @@ define(['konva'], function (Konva) {
      * @return {Function} Provides Konva handle group on execution
      */
     defaultInMarker: function (options) {
-      return createHandle(options.height, options.inMarkerColor, true);
+      return createHandle(options.height, options.inMarkerColor, true, options.inlineColor);
     },
 
     /**
@@ -357,7 +359,7 @@ define(['konva'], function (Konva) {
      * @return {Function} Provides Konva handle group on execution
      */
     defaultOutMarker: function (options) {
-      return createHandle(options.height, options.outMarkerColor, false);
+      return createHandle(options.height, options.outMarkerColor, false, options.outlineColor);
     },
 
     defaultPointMarker: function (options) {
@@ -368,7 +370,7 @@ define(['konva'], function (Konva) {
       return function (segment, parent) {
         return new Konva.Text({
           x: 12,
-          y: 12,
+          y: 22,
           text: parent.labelText,
           fontSize: 12,
           fontFamily: 'Arial, sans-serif',

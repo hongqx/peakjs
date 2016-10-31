@@ -108,7 +108,7 @@ define([
           if(self.segment === _segment){
             return;
           }
-          if(self.segment ){
+          if(self.segment){
             self.segment.inMarker.children[2].hide();
             self.segment.outMarker.children[2].hide();
             self.segment.view.segmentLayer.draw();
@@ -373,19 +373,25 @@ define([
      * @return {[type]} [description]
      */
     this.changeMarker = function(segment){
-        if(self.segment === segment.zoom){
+        if(segment && segment.zoom && self.segment === segment.zoom){
           return;
         }
-        if(this.segment ){
+        if(this.segment){
             this.segment.inMarker.children[2].hide();
             this.segment.outMarker.children[2].hide();
             this.segment.view.segmentLayer.draw();
             //window.parent1 = self.showMarkerView.parent;
         }
-        if(!segment){
+        if(!segment || !segment.zoom){
           this.segment = null;
           return;
         }
+        // if(this.segment){
+        //     this.segment.inMarker.children[2].hide();
+        //     this.segment.outMarker.children[2].hide();
+        //     this.segment.view.segmentLayer.draw();
+        //     //window.parent1 = self.showMarkerView.parent;
+        // }
         segment.zoom.inMarker.children[2].show();
         segment.zoom.outMarker.children[2].show();
         segment.zoom.view.segmentLayer.draw();

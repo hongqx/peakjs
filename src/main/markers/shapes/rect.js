@@ -66,7 +66,7 @@ define([
    * @param {Canvas} canvas
    * @param {interpolateHeight} y
    */
-  WaveShape.update = function updateRectShape(view, segmentId){
+  WaveShape.update = function updateRectShape(view, segmentId, color){
     var waveformData = view.data;
 
     if (waveformData.segments[segmentId] === undefined){
@@ -76,10 +76,11 @@ define([
     var segment = waveformData.segments[segmentId];
     var offset_length = segment.offset_length;
     var offset_start = segment.offset_start - waveformData.offset_start;
-
+    var color = color;
     this.setAttrs({
       x: offset_start,
-      width: offset_length
+      width: offset_length,
+      fill:color
     });
   };
 

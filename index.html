@@ -61,7 +61,7 @@
 
       <div id="demo-controls">
         <audio controls=controls>
-          <source src="./test_data/sample.mp4" type="audio/mpeg">
+          <source src="./test_data/sample1.mp4" type="audio/mpeg">
           <!-- <source src="./test_data/sample.ogg" type="audio/ogg"> -->
           Your browser does not support the audio element.
         </audio>
@@ -92,24 +92,36 @@
             container: document.getElementById('first-waveform-visualiser-container'),
             mediaElement: document.querySelector('audio'),
             dataUri: {
-              arraybuffer: '/test_data/sample.dat'/*,
+              arraybuffer: '/test_data/sample1.dat'/*,
               json: '/test_data/sample.json'*/
             },
             keyboard: false,
+            overviewHighlightRectangleColor:"red",
+            outlineColor:"blue",
+            inlineColor:"blue",
+            inMarkerColor: 'red',
+            outMarkerColor: 'red',
+            axisLabelColor:"blue",
+            axisGridlineColor:"red",//时间刻度线的颜色
+            axisLabelColor:"blue",//显示时间数字的颜色
+            markerHeight:5,//时间刻度表与边缘的位置差
+            playheadColor:"red",//当前时间点线的颜色
+            playheadTextColor:"blue",//时间线跟随的事件数字的颜色
+            height: 150,
             segments: [{
                 segmentId:"00",
                 startTime: 0,
                 endTime: 10,
                 editable: true,
-                color: "#ff0000",
-                labelText: "My label",
+                color: "#292a2b",
+                labelText: "Peaks is a modular frontend component designed for the display of and interaction",
                 index:0
               },{
                 segmentId:"01",
                 startTime: 12,
                 endTime: 16,
                 editable: true,
-                color: "#00ff00",
+                color: "#0c204c",
                 labelText: "My label",
                 index:1
               },{
@@ -117,7 +129,7 @@
                 startTime: 17,
                 endTime: 20,
                 editable: true,
-                color: "#ff0000",
+                color: "#292a2b",
                 labelText: "My label",
                 index:2
               },{
@@ -125,7 +137,7 @@
                 startTime: 120,
                 endTime: 140,
                 editable: true,
-                color: "#ff0000",
+                color: "#0c204c",
                 labelText: "My label",
                 index: 3
               },
@@ -134,7 +146,7 @@
                 startTime: 220,
                 endTime: 240,
                 editable: false,
-                color: "#00ff00",
+                color: "#292a2b",
                 labelText: "My Second label",
                 index: 4
               }]
@@ -270,12 +282,20 @@
           });
 
           this.peaksInstance.on('segments.dragend', function (segment) {
-               console.log("-------"+JSON.stringify(segment));
+               //console.log("-------"+JSON.stringify(segment));
           });
           this.peaksInstance.on('segments.dragmove', function (segment) {
-               console.log("-------segments.dragmove");
+               //console.log("-------segments.dragmove");
           });
+          this.peaksInstance.on('segment.click', function (segment) {
+               
+               // peaksInstance.segments.hide(peaksInstance.editNum);
+               // var _index = parseInt(segment.id.replace("segment",""));
+               // peaksInstance.segments.show(_index);
+               // peaksInstance.editNum = _index;
 
+          });
+   
           this.peaksInstance.on('dbclickAddSegment', function () {
                   var segment = getSegment(peaksInstance);
                   if(segment === 0){
@@ -284,14 +304,19 @@
                       return ;
                   }else{
                       segment.editable = true;
-                  }/*= {
-                    startTime: peaksInstance.time.getCurrentTime(),
-                    endTime: peaksInstance.time.getCurrentTime() + 5,
-                    editable: true
-                  };*/
+                      if(segment.index % 2 === 0){
+                          segment.color = "#292a2b";
+                      }else{
+                          segment.color = "#0c204c";
+                      }
+                  }
 
                   var segment = peaksInstance.segments.add([segment]);
                   console.log(segment);
+          });
+
+          this.peaksInstance.on("segment.click",function(segment){
+              console.log("segment is clicked");
           });
 
           document.querySelector('button[data-action="log-data"]').addEventListener("click", function (event) {
