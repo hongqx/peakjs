@@ -27,7 +27,7 @@ define([
       x: 0,
       width: 0,
       height: view.height,
-      opacity:0.4
+      opacity:0.7
     });
     return shape
     /*var group = new Konva.Group({});

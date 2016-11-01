@@ -99,7 +99,12 @@ define([
     
     //绑定双击事件
     that.stage.on('dblclick', function (event) {
-        that.peaks.emit('dbclickAddSegment');
+        that.peaks.emit('zoomviewdblclick');
+    });
+
+    //绑定单击事件
+    that.stage.on('click', function (event) {
+        that.peaks.emit('zoomviewclick');
     });
 
     // EVENTS ====================================================
@@ -201,7 +206,7 @@ define([
 
     that.zoomWaveformLayer.add(that.zoomWaveformShape);
     that.stage.add(that.zoomWaveformLayer);
-    that.peaks.emit("waveform_zoom_displaying", 0 * that.data.seconds_per_pixel, that.width * that.data.seconds_per_pixel);
+    that.peaks.emit("waveform_zoom_displaying", 0* that.data.seconds_per_pixel, that.width * that.data.seconds_per_pixel);
   };
 
   WaveformZoomView.prototype.createUi = function() {

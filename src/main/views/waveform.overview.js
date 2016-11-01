@@ -33,9 +33,9 @@ define([
 
     that.background = new Konva.Rect({
       x: 0,
-      y: 0,
+      y: 11,
       width: that.width,
-      height: that.height
+      height: that.height - (11*2)
     });
 
     that.waveformLayer.add(that.background);

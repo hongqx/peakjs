@@ -90,7 +90,7 @@ define([
         if(this.parent === self.segment){
           return;
         }
-        if(self.segment ){
+        if(self.segment && self.segment.inMarker.children.length>0){
             self.segment.inMarker.children[2].hide();
             self.segment.outMarker.children[2].hide();
             self.segment.view.segmentLayer.draw();
@@ -108,7 +108,7 @@ define([
           if(self.segment === _segment){
             return;
           }
-          if(self.segment){
+          if(self.segment && self.segment.inMarker.children.length){
             self.segment.inMarker.children[2].hide();
             self.segment.outMarker.children[2].hide();
             self.segment.view.segmentLayer.draw();
@@ -376,7 +376,7 @@ define([
         if(segment && segment.zoom && self.segment === segment.zoom){
           return;
         }
-        if(this.segment){
+        if(this.segment && this.segment.inMarker.children.length){
             this.segment.inMarker.children[2].hide();
             this.segment.outMarker.children[2].hide();
             this.segment.view.segmentLayer.draw();
