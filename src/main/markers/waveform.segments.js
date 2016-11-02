@@ -50,7 +50,6 @@ define([
          if(position < 0){
             position = _len;
          }
-         console.log("the position insert is "+position);
          segment.index = position;
          this.segments.splice(position, 0, segment);
          i = position+1,
@@ -227,12 +226,13 @@ define([
     var segmentHandleDrag = function (thisSeg, segment, segmentList) {
       if (thisSeg.inMarker.getX() > 0) {
         var inOffset = thisSeg.view.frameOffset + thisSeg.inMarker.getX() + thisSeg.inMarker.getWidth();
-        segment.startTime = thisSeg.view.data.time(inOffset);
+        //console.log("thisSeg.view.data.time(inOffset):"+thisSeg.view.data.time(inOffset)+"  to fix:"+thisSeg.view.data.time(inOffset).toFixed(2));
+        segment.startTime = Number(thisSeg.view.data.time(inOffset).toFixed(2));
       }
 
       if (thisSeg.outMarker.getX() < thisSeg.view.width) {
         var outOffset = thisSeg.view.frameOffset + thisSeg.outMarker.getX();
-        segment.endTime = thisSeg.view.data.time(outOffset);
+        segment.endTime = Number(thisSeg.view.data.time(outOffset).toFixed(2));
       }
       peaks.emit("segments.dragmove", segment);
 

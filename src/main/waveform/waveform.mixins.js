@@ -251,13 +251,12 @@ define(['konva'], function (Konva) {
    */
   function drawWaveform(ctx, min, max, offset_start, offset_length, y) {
     ctx.beginPath();
-
     min.forEach(function(val, x){
-      ctx.lineTo(offset_start + x + 0.5, y(val) + 0.5);
+      ctx.lineTo(offset_start + x + 1, y(val) + 1);
     });
 
     max.reverse().forEach(function(val, x){
-      ctx.lineTo(offset_start + (offset_length - x) + 0.5, y(val) + 0.5);
+      ctx.lineTo(offset_start + (offset_length - x) + 1, y(val) + 1);
     });
 
     ctx.closePath();
@@ -270,9 +269,9 @@ define(['konva'], function (Konva) {
    * @returns {interpolateHeight}
    */
   function interpolateHeightGenerator (total_height){
-    var amplitude = 256;
+    var amplitude = 512;
     return function interpolateHeight (size){
-      return total_height - ((size + 128) * total_height) / amplitude;
+      return total_height - ((size + 256) * total_height) / amplitude;
     };
   }
 
@@ -291,10 +290,10 @@ define(['konva'], function (Konva) {
      */
     waveformDrawFunction: function (view, context) {
       var waveform = view.intermediateData || view.data;
-      var y = interpolateHeightGenerator(view.height);
-      var offset_length = waveform.offset_length;
+      var y = interpolateHeightGenerator(view.height- 10 );
+      var offset_length = waveform.offset_length ;
 
-      drawWaveform(context, waveform.min, waveform.max, 0, offset_length, y);
+      drawWaveform(context, waveform.min, waveform.max, 0 , offset_length, y);
       context.fillStrokeShape(this);
     },
 
