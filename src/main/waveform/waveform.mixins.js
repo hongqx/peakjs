@@ -307,9 +307,12 @@ define(['konva'], function (Konva) {
      * @param  {Boolean}  dropHundredths  Don't display hundredths of a second if true
      * @return {String}   Formatted time string
      */
-    niceTime: function (time, dropHundredths) {
+    niceTime: function (time, dropHundredths, iftoHour) {
+      if( !iftoHour ){
+          return !dropHundredths ? Math.round(time*100)/100 : Math.round(time); 
+      }
       var hundredths, seconds, minutes, hours, result = [];
-
+      
       hundredths = Math.floor((time % 1) * 100);
       seconds = Math.floor(time);
       minutes = Math.floor(seconds / 60);

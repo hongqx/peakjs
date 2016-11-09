@@ -269,7 +269,9 @@ define([
       var remPixels = that.playheadPixel - pixelOffset;
 
       that.zoomPlayheadGroup.show().setAttr("x", remPixels);
+      //that.zoomPlayheadText.setText(mixins.niceTime(that.data.time(that.playheadPixel), false));
       that.zoomPlayheadText.setText(mixins.niceTime(that.data.time(that.playheadPixel), false));
+      
     }
     else {
       that.zoomPlayheadGroup.hide();
